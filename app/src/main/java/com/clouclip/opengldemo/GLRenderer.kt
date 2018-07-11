@@ -1,6 +1,7 @@
 package com.clouclip.opengldemo
 
-import android.opengl.GLES20
+import android.content.Context
+import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import javax.microedition.khronos.egl.EGLConfig
@@ -10,12 +11,13 @@ import android.os.SystemClock
 
 
 class GLRenderer: GLSurfaceView.Renderer {
-    private var mTriangle: Triangle? = null
+    private var mTriangle: Square2? = null
     private var mSquare: Square? = null
     private val mMVPMatrix = FloatArray(16)
     private val mProjectionMatrix = FloatArray(16)
     private val mViewMatrix = FloatArray(16)
     private val mRotationMatrix = FloatArray(16)
+    var mContext:Context? = null
     @Volatile
     var mAngle: Float = 0.toFloat()
 
@@ -26,9 +28,10 @@ class GLRenderer: GLSurfaceView.Renderer {
     fun setAngle(angle: Float) {
         mAngle = angle
     }
+
     override fun onDrawFrame(gl: GL10?) {
         val scratch = FloatArray(16)
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
         Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
 
@@ -44,17 +47,17 @@ class GLRenderer: GLSurfaceView.Renderer {
         // for the matrix multiplication product to be correct.
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0)
         // Draw shape
-        mTriangle!!.draw(mRotationMatrix)
+        mTriangle!!.draw()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        GLES20.glViewport(0, 0, width, height)
+        GLES30.glViewport(0, 0, width, height)
         val ratio = width.toFloat() / height
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
     }
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
-        mTriangle = Triangle()
+        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
+        mTriangle = Square2(mContext!!)
         mSquare = Square()
     }
 

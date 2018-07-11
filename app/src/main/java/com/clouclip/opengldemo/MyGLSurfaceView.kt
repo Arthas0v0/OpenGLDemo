@@ -15,9 +15,11 @@ class MyGLSurfaceView(context: Context?) : GLSurfaceView(context) {
       var mRenderer:GLRenderer = GLRenderer()
 
     init {
-        setEGLContextClientVersion(2)
+        setEGLContextClientVersion(3)
+        mRenderer.mContext = context
         setRenderer(mRenderer)
-        renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+
+     //   renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
