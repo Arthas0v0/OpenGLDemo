@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.*
 import android.opengl.GLES20.*
+import android.os.SystemClock
 import android.util.Log
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -12,7 +13,7 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 
-class Square2(context: Context) {
+class Square3(context: Context) {
     private var vertexBuffer: FloatBuffer? = null
     private var indiceBuffer: IntBuffer? = null
     private var mAPosition = 0
@@ -24,10 +25,47 @@ class Square2(context: Context) {
     val texture2 = IntArray(1)
     private val mRotationMatrix = FloatArray(16)
     var vertices = floatArrayOf(
-            0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // 右上
-            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // 右下
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 左下
-            -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // 左上
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     )
     var indice = intArrayOf(
             0, 1, 3, // 第一个三角形
@@ -35,22 +73,22 @@ class Square2(context: Context) {
     )// 注意索引从0开始!
 
     val vertexShaderCode =
-                "layout (location = 0) attribute vec3 a_Position;" +
-                    "layout (location = 1) attribute vec3 aColor;" +
-                    "layout (location = 2) attribute vec2 aTexCoord;" +
-                    "varying vec3 ourColor;" +
+            "layout (location = 0) attribute vec3 a_Position;" +
+
+                    "layout (location = 1) attribute vec2 aTexCoord;" +
+
                     "varying vec2 TexCoord;" +
                     "uniform mat4 model;" +
                     "uniform mat4 view;" +
                     "uniform mat4 projection;"+
-                        "uniform mat4 ortho;"+
+                    "uniform mat4 ortho;"+
                     "void main() {" +
                     "    gl_Position =  projection * view * model * vec4(a_Position,1.0);" +
-                    "   ourColor = aColor;" +
+
                     "    TexCoord = aTexCoord;" +
                     "}"
     val fragmentShaderCode =
-            "varying vec3 ourColor;" +
+
                     "varying vec2 TexCoord;" +
                     "uniform sampler2D texture1;"+
                     "uniform sampler2D texture2;"+
@@ -59,6 +97,7 @@ class Square2(context: Context) {
                     "}"
 
     init {
+        GLES30.glEnable(GL_DEPTH_TEST)
         mProgram = GLES30.glCreateProgram()
         val vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode)
         val fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode)
@@ -78,18 +117,18 @@ class Square2(context: Context) {
         vertexBuffer!!.put(vertices)
         // 设置buffer，从第一个坐标开始读
         vertexBuffer!!.position(0)
-        val aa = ByteBuffer.allocateDirect(
-                // (坐标数 * 4)float占四字节
-                indice.size * 4)
-        // 设用设备的本点字节序
-        aa.order(ByteOrder.nativeOrder())
-
-        // 从ByteBuffer创建一个浮点缓冲
-        indiceBuffer = aa.asIntBuffer()
-        // 把坐标们加入FloatBuffer中
-        indiceBuffer!!.put(indice)
-        // 设置buffer，从第一个坐标开始读
-        indiceBuffer!!.position(0)
+//        val aa = ByteBuffer.allocateDirect(
+//                // (坐标数 * 4)float占四字节
+//                indice.size * 4)
+//        // 设用设备的本点字节序
+//        aa.order(ByteOrder.nativeOrder())
+//
+//        // 从ByteBuffer创建一个浮点缓冲
+//        indiceBuffer = aa.asIntBuffer()
+//        // 把坐标们加入FloatBuffer中
+//        indiceBuffer!!.put(indice)
+//        // 设置buffer，从第一个坐标开始读
+//        indiceBuffer!!.position(0)
 
         val vb = IntArray(1)
         val EBO = IntArray(1)
@@ -106,16 +145,15 @@ class Square2(context: Context) {
         GLES30.glBufferData(GL_ARRAY_BUFFER, 4 * vertexBuffer!!.limit(), vertexBuffer, GL_STATIC_DRAW)
 
         GLES30.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0])
-        GLES30.glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * indiceBuffer!!.limit(), indiceBuffer, GL_STATIC_DRAW)
+      //  GLES30.glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * indiceBuffer!!.limit(), indiceBuffer, GL_STATIC_DRAW)
 
         mAPosition = GLES30.glGetAttribLocation(mProgram, "a_Position")
-        mAColor = GLES30.glGetAttribLocation(mProgram, "aColor")
-        GLES30.glVertexAttribPointer(mAPosition, 3, GLES30.GL_FLOAT, false, 8 * 4, 0)
+
+        GLES30.glVertexAttribPointer(mAPosition, 3, GLES30.GL_FLOAT, false, 5 * 4, 0)
         GLES30.glEnableVertexAttribArray(0)
-        GLES30.glVertexAttribPointer(mAColor, 3, GLES30.GL_FLOAT, false, 8 * 4, 12)
+        GLES30.glVertexAttribPointer(1, 2, GLES30.GL_FLOAT, false, 5 * 4, 12)
         GLES30.glEnableVertexAttribArray(1)
-        GLES30.glVertexAttribPointer(2, 2, GLES30.GL_FLOAT, false, 8 * 4,24)
-        GLES30.glEnableVertexAttribArray(2)
+
 
 
         GLES30.glGenTextures(1, texture, 0)
@@ -144,7 +182,7 @@ class Square2(context: Context) {
     }
 
     fun draw(mvpMatrix: FloatArray) {
-
+        GLES30.glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         GLES30.glUseProgram(mProgram)
 
         glActiveTexture(GL_TEXTURE0)
@@ -168,8 +206,9 @@ class Square2(context: Context) {
         Matrix.setIdentityM(viewMatrix,0)
         Matrix.setIdentityM(projectionMatrix,0)
 
-
-        Matrix.rotateM(modelMatrix, 0,-50f, 1f, 0f, 0f)
+        val time = SystemClock.uptimeMillis() % 4000L
+        val angle = 0.090f * time.toInt()
+        Matrix.rotateM(modelMatrix, 0,angle, 0.5f, 1f, 0f)
         Matrix.translateM(viewMatrix,0,0f,0f,-3f)
         Matrix.perspectiveM(projectionMatrix, 0, 45f, 1f,0f, 3f)
 
@@ -179,10 +218,11 @@ class Square2(context: Context) {
 
         GLES30.glUniformMatrix4fv(viewHandle, 1, false, viewMatrix, 0)
 
-       GLES30.glUniformMatrix4fv(projectionHandle, 1, false, projectionMatrix, 0)
+        GLES30.glUniformMatrix4fv(projectionHandle, 1, false, projectionMatrix, 0)
 
 
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 3)
+        glDrawArrays(GL_TRIANGLES, 0, 36)
+
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
 
 //        GLES30.glDisableVertexAttribArray(mAPosition)
