@@ -11,7 +11,7 @@ import android.os.SystemClock
 
 
 class GLRenderer: GLSurfaceView.Renderer {
-    private var mTriangle: Square3? = null
+    private var mTriangle: Light? = null
     private var mSquare: Square? = null
     private val mMVPMatrix = FloatArray(16)
     private val mProjectionMatrix = FloatArray(16)
@@ -48,7 +48,7 @@ class GLRenderer: GLSurfaceView.Renderer {
      //   Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0)
         // Draw shape
         //Matrix.translateM(mMVPMatrix, 0, 1f, 1f, 0f)
-        mTriangle!!.draw(mMVPMatrix)
+        mTriangle!!.draw()
 
     }
 
@@ -59,7 +59,7 @@ class GLRenderer: GLSurfaceView.Renderer {
     }
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
-        mTriangle = Square3(mContext!!)
+        mTriangle = Light()
         mSquare = Square()
     }
 

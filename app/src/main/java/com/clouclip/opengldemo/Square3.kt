@@ -144,7 +144,7 @@ class Square3(context: Context) {
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, vb[0])
         GLES30.glBufferData(GL_ARRAY_BUFFER, 4 * vertexBuffer!!.limit(), vertexBuffer, GL_STATIC_DRAW)
 
-        GLES30.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0])
+     //   GLES30.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0])
       //  GLES30.glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * indiceBuffer!!.limit(), indiceBuffer, GL_STATIC_DRAW)
 
         mAPosition = GLES30.glGetAttribLocation(mProgram, "a_Position")
