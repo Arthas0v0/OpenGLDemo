@@ -13,76 +13,93 @@ import java.nio.FloatBuffer
 class Light {
     private var vertexBuffer: FloatBuffer? = null
     var vertices = floatArrayOf(
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f,  0.5f, -0.5f,
-            0.5f,  0.5f, -0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
 
-            -0.5f, -0.5f,  0.5f,
-            0.5f, -0.5f,  0.5f,
-            0.5f,  0.5f,  0.5f,
-            0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
+            -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+            -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
 
-            0.5f,  0.5f,  0.5f,
-            0.5f,  0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f,  0.5f,
-            0.5f,  0.5f,  0.5f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
 
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f,  0.5f,
-            0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
 
-            -0.5f,  0.5f, -0.5f,
-            0.5f,  0.5f, -0.5f,
-            0.5f,  0.5f,  0.5f,
-            0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f
-            )
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f
+    )
     var mProgram = 0
-    var mProgram2= 0
+    var mProgram2 = 0
     val va = IntArray(1)
     val lightVAO = IntArray(1)
     val vertexShaderCode =
-            "layout (location = 0) attribute vec3 a_Position;" +
+                    "layout (location = 0) attribute vec3 a_Position;" +
+                    "layout (location = 1) attribute vec3 aNormal;" +
+                    "varying vec3 Normal;" +
+                    "varying vec3 FragPos;" +
                     "uniform mat4 model;" +
                     "uniform mat4 view;" +
                     "uniform mat4 projection;" +
                     "void main() {" +
-                    "    gl_Position =  projection * view * model * vec4(a_Position,1.0);" +
+                    "gl_Position =  projection * view * model * vec4(a_Position,1.0);" +
+                    "FragPos = vec3(model * vec4(a_Position, 1.0));" +
+                    "Normal = aNormal;" +
                     "}"
     val fragmentShaderCode =
 
             "uniform vec3 objectColor;" +
+                    "varying vec3 Normal;" +
+                    "varying vec3 FragPos;" +
                     "uniform vec3 lightColor;" +
+                    "uniform vec3 lightPos;" +
                     "void main() {" +
                     "  float ambientStrength = 0.1;" +
                     "    vec3 ambient = ambientStrength * lightColor;" +
-                    "    vec3 result = ambient * objectColor;"+
-                    "    gl_FragColor = vec4 (result,1f);" +
+
+                    "vec3 norm = normalize(Normal);" +
+                    "vec3 lightDir = normalize(lightPos - FragPos);" +
+                    "float diff = max(dot(norm, lightDir), 0.0);" +
+                    "vec3 diffuse = diff * lightColor;" +
+                    "vec3 result = (ambient + diffuse) * objectColor;" +
+                    "gl_FragColor = vec4(result, 1.0);" +
+
                     "}"
     val fragmentShaderCode2 =
 
+
                     "void main() {" +
                     "    gl_FragColor = vec4(1.0f,1.0f,1.0f,1.0f);" +
+
                     "}"
     var camera = Camera()
+
     init {
         GLES30.glEnable(GLES20.GL_DEPTH_TEST)
         camera.setLocation(0.0f, 0.0f, 3.0f)
@@ -121,15 +138,16 @@ class Light {
         GLES30.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vb[0])
         GLES30.glBufferData(GLES20.GL_ARRAY_BUFFER, 4 * vertexBuffer!!.limit(), vertexBuffer, GLES20.GL_STATIC_DRAW)
 
-        GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 3 * 4, 0)
+        GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 6 * 4, 0)
         GLES30.glEnableVertexAttribArray(0)
-
+        GLES30.glVertexAttribPointer(1, 3, GLES30.GL_FLOAT, false, 6 * 4, 12)
+        GLES30.glEnableVertexAttribArray(1)
 
 
         GLES30.glGenVertexArrays(1, lightVAO, 0)
         GLES30.glBindVertexArray(lightVAO[0])
         GLES30.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vb[0])
-        GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 3 * 4, 0)
+        GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 6 * 4, 0)
         GLES30.glEnableVertexAttribArray(0)
     }
 
@@ -161,29 +179,31 @@ class Light {
 
         val objectColorHandle = GLES30.glGetUniformLocation(mProgram, "objectColor")
         val lightColorHandle = GLES30.glGetUniformLocation(mProgram, "lightColor")
+        val lightPosHandle = GLES30.glGetUniformLocation(mProgram, "lightPos")
 
-        GLES30.glUniform3f(objectColorHandle,  1.0f, 0.5f, 0.31f)
-        GLES30.glUniform3f(lightColorHandle,  1.0f, 1.0f, 1.0f)
+        GLES30.glUniform3f(objectColorHandle, 1.0f, 0.5f, 0.31f)
+        GLES30.glUniform3f(lightColorHandle, 1.0f, 1.0f, 1.0f)
+        GLES30.glUniform3f(lightPosHandle, 1.2f, 1.0f, 2.0f)
         GLES30.glBindVertexArray(va[0])
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 36)
-  //      GLES30.glDrawElements(GLES30.GL_TRIANGLES, 6, GLES30.GL_UNSIGNED_INT, 0)
+        //      GLES30.glDrawElements(GLES30.GL_TRIANGLES, 6, GLES30.GL_UNSIGNED_INT, 0)
 
         GLES30.glUseProgram(mProgram2)
-         modelHandle = GLES30.glGetUniformLocation(mProgram2, "model")
-         viewHandle = GLES30.glGetUniformLocation(mProgram2, "view")
-         projectionHandle = GLES30.glGetUniformLocation(mProgram2, "projection")
-         modelMatrix = FloatArray(16)
-         viewMatrix = FloatArray(16)
-         projectionMatrix = FloatArray(16)
+        modelHandle = GLES30.glGetUniformLocation(mProgram2, "model")
+        viewHandle = GLES30.glGetUniformLocation(mProgram2, "view")
+        projectionHandle = GLES30.glGetUniformLocation(mProgram2, "projection")
+        modelMatrix = FloatArray(16)
+        viewMatrix = FloatArray(16)
+        projectionMatrix = FloatArray(16)
 
         Matrix.setIdentityM(modelMatrix, 0)
         Matrix.setIdentityM(viewMatrix, 0)
         Matrix.setIdentityM(projectionMatrix, 0)
 
-         time = SystemClock.uptimeMillis() % 4000L
-         angle = 0.090f * time.toInt()
+        time = SystemClock.uptimeMillis() % 4000L
+        angle = 0.090f * time.toInt()
         Matrix.rotateM(modelMatrix, 0, 45f, 0.5f, 1f, 0f)
-        Matrix.scaleM(modelMatrix,0,modelMatrix,0,0.2f,0.2f,0.2f)
+        Matrix.scaleM(modelMatrix, 0, modelMatrix, 0, 0.2f, 0.2f, 0.2f)
         Matrix.translateM(viewMatrix, 0, 1f, 0f, -3f)
         Matrix.perspectiveM(projectionMatrix, 0, 45f, 1f, 0f, 3f)
         GLES30.glUniformMatrix4fv(modelHandle, 1, false, modelMatrix, 0)
