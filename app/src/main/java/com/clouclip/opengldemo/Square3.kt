@@ -182,6 +182,7 @@ class Square3(context: Context) {
     }
 
     fun draw(mvpMatrix: FloatArray) {
+        GLES30.glClearDepthf(1.0f)
         GLES30.glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         GLES30.glUseProgram(mProgram)
 
@@ -208,9 +209,10 @@ class Square3(context: Context) {
 
         val time = SystemClock.uptimeMillis() % 4000L
         val angle = 0.090f * time.toInt()
-        Matrix.rotateM(modelMatrix, 0,angle, 0.5f, 1f, 0f)
+        Matrix.rotateM(modelMatrix, 0,angle, 0f, 1f, 0f)
+
         Matrix.translateM(viewMatrix,0,0f,0f,-3f)
-        Matrix.perspectiveM(projectionMatrix, 0, 45f, 1f,0f, 3f)
+        Matrix.perspectiveM(projectionMatrix, 0, 45f, 1f,1f, 3f)
 
 
         GLES30.glUniformMatrix4fv(orthoHandle, 1, false, orthoMatrix, 0)
@@ -221,10 +223,10 @@ class Square3(context: Context) {
         GLES30.glUniformMatrix4fv(projectionHandle, 1, false, projectionMatrix, 0)
 
 
+
+        GLES30.glBindVertexArray(va[0])
+     //   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
         glDrawArrays(GL_TRIANGLES, 0, 36)
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
-
 //        GLES30.glDisableVertexAttribArray(mAPosition)
     }
 
