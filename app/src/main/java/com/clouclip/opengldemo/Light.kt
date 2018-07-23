@@ -207,11 +207,9 @@ class Light {
         projectionHandle = GLES30.glGetUniformLocation(mProgram2, "projection")
 
         modelMatrix = FloatArray(16)
-        viewMatrix = FloatArray(16)
         projectionMatrix = FloatArray(16)
 
         Matrix.setIdentityM(modelMatrix, 0)
-        Matrix.setIdentityM(viewMatrix, 0)
         Matrix.setIdentityM(projectionMatrix, 0)
 
         time = SystemClock.uptimeMillis() % 4000L

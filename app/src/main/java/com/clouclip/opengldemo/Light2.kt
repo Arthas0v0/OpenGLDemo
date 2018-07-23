@@ -10,6 +10,7 @@ import android.util.Log
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
+import kotlin.math.sin
 
 class Light2 {
     private var vertexBuffer: FloatBuffer? = null
@@ -82,20 +83,34 @@ class Light2 {
                     "uniform vec3 lightColor;" +
                     "uniform vec3 lightPos;" +
                     "uniform vec3 viewPos;" +
+                    "struct Material {" +
+                    "    vec3 ambient;" +
+                    "    vec3 diffuse;" +
+                    "    vec3 specular;" +
+                    "    float shininess;" +
+                    "}; " +
+                    "uniform Material material;" +
+                    "struct Light {" +
+                    "    vec3 position;" +
+                    "    vec3 ambient;" +
+                    "    vec3 diffuse;" +
+                    "    vec3 specular;" +
+                    "};" +
+                    "uniform Light light;" +
                     "void main() {" +
                     "  float ambientStrength = 0.1;" +
+                    "  vec3 ambient = light.ambient  * material.ambient;" +
 
-                    "    vec3 ambient = ambientStrength * lightColor;" +
+                    " vec3 norm = normalize(Normal);" +
+                    "vec3 lightDir = normalize(light.position - FragPos);" +
+                    "float diff = max(dot(norm, lightDir), 0.0);" +
+                    "vec3 diffuse = light.diffuse * (diff * material.diffuse);" +
 
-                    "vec3 norm = normalize(Normal);" +
-                    "vec3 lightDir = normalize(lightPos - FragPos);" +
                     "vec3 viewDir = normalize(viewPos - FragPos);" +
                     "vec3 reflectDir = reflect(-lightDir, norm);" +
-                    "float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);" +
-                    "float specularStrength = 0.5;" +
-                    "vec3 specular = specularStrength * spec * lightColor;" +
-                    "float diff = max(dot(norm, lightDir), 0.0);" +
-                    "vec3 diffuse = diff * lightColor;" +
+                    "float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);" +
+                    "vec3 specular = light.specular * (spec * material.specular);  " +
+
                     "vec3 result = (ambient + diffuse+ specular) * objectColor;" +
                     "gl_FragColor = vec4(result, 1.0);" +
 
@@ -188,15 +203,35 @@ class Light2 {
         GLES30.glUniformMatrix4fv(viewHandle, 1, false, mvpMatrix, 0)
 
         GLES30.glUniformMatrix4fv(projectionHandle, 1, false, projectionMatrix, 0)
+        val lightPosHandle = GLES30.glGetUniformLocation(mProgram, "light.position")
+        val viewPosHandle = GLES30.glGetUniformLocation(mProgram, "viewPos")
+
 
         val objectColorHandle = GLES30.glGetUniformLocation(mProgram, "objectColor")
         val lightColorHandle = GLES30.glGetUniformLocation(mProgram, "lightColor")
-        val lightPosHandle = GLES30.glGetUniformLocation(mProgram, "lightPos")
-        val viewPosHandle = GLES30.glGetUniformLocation(mProgram, "viewPos")
+
+        val ambientHandle = GLES30.glGetUniformLocation(mProgram, "material.ambient")
+        val diffuseHandle = GLES30.glGetUniformLocation(mProgram, "material.diffuse")
+        val specularHandle = GLES30.glGetUniformLocation(mProgram, "material.specular")
+        val shininessHandle = GLES30.glGetUniformLocation(mProgram, "material.shininess")
+
+        val lightambientHandle = GLES30.glGetUniformLocation(mProgram, "light.ambient")
+        val lightdiffuseHandle = GLES30.glGetUniformLocation(mProgram, "light.diffuse")
+        val lightspecularHandle = GLES30.glGetUniformLocation(mProgram, "light.specular")
+
         GLES30.glUniform3f(objectColorHandle, 1.0f, 0.5f, 0.31f)
         GLES30.glUniform3f(lightColorHandle, 1.0f, 1.0f, 1.0f)
         GLES30.glUniform3f(lightPosHandle, 1.2f, 1.0f, 2.0f)
         GLES30.glUniform3f(viewPosHandle, 0f, 0f, 0f)
+        GLES30.glUniform3f(ambientHandle, 1.0f, 0.5f, 0.31f)
+        GLES30.glUniform3f(diffuseHandle, 1.0f, 0.5f, 0.31f)
+        GLES30.glUniform3f(specularHandle, 0.5f, 0.5f, 0.5f)
+        GLES30.glUniform1f(shininessHandle, 32f)
+
+        GLES30.glUniform3f(lightambientHandle, sin(time%10000/4000f*2f)*0.5f ,  sin(time%10000/1000f*0.7f)*0.5f,  sin(time%10000/1000f*1.3f)*0.5f)
+        GLES30.glUniform3f(lightdiffuseHandle,  sin(time%10000/4000f*2f)*0.5f*0.2f ,  sin(time%10000/1000f*0.7f)*0.5f*0.2f,  sin(time%10000/1000f*1.3f)*0.5f*0.2f)
+        GLES30.glUniform3f(lightspecularHandle, 1.0f, 1.0f, 1.0f)
+
         GLES30.glBindVertexArray(va[0])
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 36)
         //      GLES30.glDrawElements(GLES30.GL_TRIANGLES, 6, GLES30.GL_UNSIGNED_INT, 0)
@@ -207,15 +242,12 @@ class Light2 {
         projectionHandle = GLES30.glGetUniformLocation(mProgram2, "projection")
 
         modelMatrix = FloatArray(16)
-        viewMatrix = FloatArray(16)
         projectionMatrix = FloatArray(16)
 
         Matrix.setIdentityM(modelMatrix, 0)
-        Matrix.setIdentityM(viewMatrix, 0)
         Matrix.setIdentityM(projectionMatrix, 0)
 
-        time = SystemClock.uptimeMillis() % 4000L
-        angle = 0.090f * time.toInt()
+
         Matrix.translateM(modelMatrix, 0, -0.2f, 0f, -3f)
         Matrix.rotateM(modelMatrix, 0, 45f, 0.5f, 1f, 0f)
         Matrix.scaleM(modelMatrix, 0, modelMatrix, 0, 0.2f, 0.2f, 0.2f)
