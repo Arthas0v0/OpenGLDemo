@@ -32,7 +32,7 @@ class GLRenderer: GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         val scratch = FloatArray(16)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
-        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -7f, 0f, 0f, 0f, 0f, -1.0f, 0.0f)
+        Matrix.setLookAtM(mViewMatrix, 0, 0f, 2f, 3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
 
 
         // Calculate the projection and view transformation
@@ -40,15 +40,15 @@ class GLRenderer: GLSurfaceView.Renderer {
 
         val time = SystemClock.uptimeMillis() % 4000L
         val angle = 0.090f * time.toInt()
-    //    Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, -1.0f)
-       // Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0f, 0f, -1.0f)
+        Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, -1.0f)
+     //   Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0f, 0f, -1.0f)
         // Combine the rotation matrix with the projection and camera view
         // Note that the mMVPMatrix factor *must be first* in order
         // for the matrix multiplication product to be correct.
-     //   Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0)
+        Matrix.multiplyMM(scratch, 0, mViewMatrix, 0, mRotationMatrix, 0)
         // Draw shape
         //Matrix.translateM(mMVPMatrix, 0, 1f, 1f, 0f)
-        mTriangle!!.draw()
+        mTriangle!!.draw(scratch)
 
     }
 

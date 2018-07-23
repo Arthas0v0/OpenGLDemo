@@ -11,7 +11,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class Light {
+class Light2 {
     private var vertexBuffer: FloatBuffer? = null
     var vertices = floatArrayOf(
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
